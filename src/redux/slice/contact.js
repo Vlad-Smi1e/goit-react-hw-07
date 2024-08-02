@@ -1,8 +1,9 @@
+
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchContacts, addContact, deleteContact } from './operations';
+import { fetchContacts, addContact, deleteContact } from '../operation';
 
 const initialContactsState = {
-  contacts: [],
+  items: [],
   isLoading: false,
   error: null,
 };
@@ -15,46 +16,44 @@ export const contactsSlice = createSlice({
     builder
       .addCase(fetchContacts.pending, state => {
         state.isLoading = true;
-        state.error = null;
       })
       .addCase(fetchContacts.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.contacts = action.payload;
         state.error = null;
+        state.items = action.payload;
       })
       .addCase(fetchContacts.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(addContact.pending, state => {
         state.isLoading = true;
-        state.error = null;
       })
       .addCase(addContact.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.contacts.push(action.payload);
         state.error = null;
+        state.items.push(action.payload);
       })
       .addCase(addContact.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(deleteContact.pending, state => {
         state.isLoading = true;
-        state.error = null;
       })
       .addCase(deleteContact.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.contacts = state.contacts.filter(
+        state.error = null;
+        state.items = state.items.filter(
           contact => contact.id !== action.payload
         );
-        state.error = null;
       })
       .addCase(deleteContact.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       });
   },
 });
 
-export const contactsReducer = contactsSlice.reducer;
+export const { reducer: contactsReducer } = contactsSlice;
+export { addContact, deleteContact };

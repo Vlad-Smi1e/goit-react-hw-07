@@ -1,23 +1,15 @@
-// App.jsx
 import React, { useEffect } from 'react';
 import { ContactForm } from './ContactForm/ContactForm';
 import { Filter } from './Filter/Filter';
 import { ContactList } from './ContactList/ContactList';
 import { useSelector, useDispatch } from 'react-redux';
-import { addContact, deleteContact, fetchContacts } from '../redux/operations';
-import { setFilter } from '../redux/filterSlice';
-import {
-  selectVisibleContacts,
-  selectIsLoading,
-  selectFilter,
-  selectError,
-} from '../redux/selector';
+import { fetchContacts, addContact, deleteContact } from 'redux/operation';
+import { selectVisibleContacts, selectIsLoading, selectError } from 'redux/selector';
 
 export const App = () => {
   const visibleContacts = useSelector(selectVisibleContacts);
   const isLoading = useSelector(selectIsLoading);
   const error = useSelector(selectError);
-  const filter = useSelector(selectFilter);
 
   const dispatch = useDispatch();
 
@@ -33,26 +25,27 @@ export const App = () => {
     dispatch(deleteContact(id));
   };
 
-  const handleFilterChange = filterValue => {
-    dispatch(setFilter(filterValue));
-  };
-
   return (
-    <div>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontSize: 20,
+        color: '#010101',
+        backgroundColor: 'rgb(248, 246, 247)',
+        minHeight: '100vh',
+        padding: '1rem',
+      }}
+    >
       <h1>Phonebook</h1>
-      <ContactForm addContact={handleAddContact} contacts={visibleContacts} />
+      <ContactForm onAddContact={handleAddContact} />
       <h2>Contacts</h2>
-      <Filter filter={filter} setFilter={handleFilterChange} />
-
-      {isLoading && (
-        <b style={{ display: 'block', padding: '0 0 20px 10px' }}>Loading...</b>
-      )}
-      {error && <b>Error: {error}</b>}
-
-      <ContactList
-        contacts={visibleContacts}
-        deleteContact={handleDeleteContact}
-      />
+      <Filter />
+      <ContactList contacts={visibleContacts} onDeleteContact={handleDeleteContact} />
+      {isLoading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
     </div>
   );
 };
