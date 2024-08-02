@@ -1,29 +1,29 @@
-import css from './ContactList.module.css';
-import { useSelector } from 'react-redux';
-import { selectContacts, selectFilter } from 'redux/selector';
-import { Contact } from 'components/Contact/Contact';
+import { useSelector } from "react-redux";
+import Contact from "../Contact/Contact";
+import css from "./ContactList.module.css";
+import {
+  selectError,
+  selectFilteredContacts,
+  selectLoading,
+} from "../../redux/selectors";
 
-export const ContactList = () => {
-  const contacts = useSelector(selectContacts);
-  const filter = useSelector(selectFilter);
-
-  if (!contacts) {
-    return null;
-  }
-
-  const visibleContacts = contacts.filter(contact =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
-  );
-
+const ContactList = () => {
+  const filteredContacts = useSelector(selectFilteredContacts) || [];
+  const loading = useSelector(selectLoading);
+  const error = useSelector(selectError);
   return (
-    <div className={css.wraperContactList}>
+    <>
+      {loading && <p>Loading...</p>}
+      {error && <p>Error</p>}
       <ul className={css.contactList}>
-        {visibleContacts.map((contact) => (
-          <li key={contact.id} className={css.contactListItem}>
-            <Contact contact={contact} />
+        {filteredContacts.map((contact) => (
+          <li className={css.contactListItem} key={contact.id}>
+            <Contact {...contact} />
           </li>
         ))}
       </ul>
-    </div>
+    </>
   );
 };
+
+export default ContactList;

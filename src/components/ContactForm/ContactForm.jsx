@@ -1,58 +1,51 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from 'redux/slice/contact';
-import { selectContacts } from 'redux/selector';
-import css from './ContactForm.module.css';
+import { addContact } from "../../redux/contactsOps";
+import { nanoid } from "nanoid";
+import css from "./ContactForm.module.css";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { useDispatch } from "react-redux";
+const ValidationSchema = Yup.object().shape({
+  name: Yup.string()
+    .min(3, "Too Short!")
+    .max(50, "Too Long!")
+    .required("Required"),
+  number: Yup.string()
+    .min(3, "Too Short!")
+    .max(50, "Too Long!")
+    .required("Required"),
+});
 
-export const ContactForm = () => {
+const ContactForm = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(selectContacts);
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    const form = e.target;
-    const name = form.elements.name.value;
-    const number = form.elements.number.value;
-    form.reset();
-    
-    if (contacts.find(contact => contact.name === name)) {
-      alert(`${name} is already in contacts`);
-      return false;
-    }
-    dispatch(addContact({ name, number }));
-    return true;
+  const handleSubmit = (values, { resetForm }) => {
+    dispatch(addContact(values));
+    resetForm();
   };
 
   return (
-    <form className={css.form} onSubmit={handleSubmit} autoComplete="off">
-      <label className={css.formLabel}>Name </label>
-      <input
-        className={css.formName}
-        type="text"
-        name="name"
-        pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-        title="Name may contain only letters, apostrophe, dash and spaces."
-        required
-        placeholder="Enter name"
-      />
-      <label className={css.formLabel}>Number </label>
-      <input
-        className={css.formNumber}
-        type="tel"
-        name="number"
-        pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-        title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +."
-        required
-        placeholder="Enter phone number"
-      />
-      <button className={css.formBtn} type="submit">
-        Add contact
-      </button>
-    </form>
+    <Formik
+      initialValues={{
+        name: "",
+        number: "",
+      }}
+      onSubmit={handleSubmit}
+      validationSchema={ValidationSchema}
+    >
+      <Form className={css.form}>
+        <label htmlFor="name">Name</label>
+        <Field type="text" name="name" id="name" />
+        <ErrorMessage className={css.error} name="name" component="span" />
+
+        <label htmlFor="number">Number</label>
+        <Field type="text" name="number" id="number" />
+        <ErrorMessage className={css.error} name="number" component="span" />
+
+        <button className={css.button} type="submit">
+          Add contact
+        </button>
+      </Form>
+    </Formik>
   );
 };
-
-ContactForm.propTypes = {
-  contacts: PropTypes.array, // Ensure this matches the expected type
-};
+export default ContactForm;

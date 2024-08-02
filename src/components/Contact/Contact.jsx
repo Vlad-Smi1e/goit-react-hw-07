@@ -1,33 +1,35 @@
-import { useDispatch } from 'react-redux';
-import { deleteContact } from 'redux/slice/contact'; // Ensure this matches the export from your slice file
-import PropTypes from 'prop-types';
-import css from '../ContactList/ContactList.module.css';
+import { IoMdPerson } from "react-icons/io";
+import { FaPhoneAlt } from "react-icons/fa";
+import css from "./Contact.module.css";
+import { useDispatch } from "react-redux";
+import { deleteContact } from "../../redux/contactsOps";
 
-export const Contact = ({ contact }) => {
+const Contact = ({ id, name, number }) => {
   const dispatch = useDispatch();
 
-  const handleDelete = () => dispatch(deleteContact(contact.id));
-
+  const handleDelete = () => {
+    dispatch(deleteContact(id));
+  };
   return (
-    <div>
-      <span>
-        {contact.name}: <span>{contact.number}</span>
-      </span>
+    <>
+      <div>
+        <p>
+          <IoMdPerson className={css.icon} />
+          {name}
+        </p>
+        <p>
+          <FaPhoneAlt className={css.icon} />
+          {number}
+        </p>
+      </div>
       <button
+        className={css.button}
+        onClick={() => handleDelete(id)}
         type="button"
-        className={css.contactListItemBtn}
-        onClick={handleDelete}
       >
-        delete
+        Delete
       </button>
-    </div>
+    </>
   );
 };
-
-Contact.propTypes = {
-  contact: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    number: PropTypes.string.isRequired,
-  }).isRequired,
-};
+export default Contact;

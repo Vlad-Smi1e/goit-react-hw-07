@@ -1,41 +1,22 @@
 .form {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center form elements */
-  }
-  
-  .formLabel {
-    align-self: flex-start;
-    margin-bottom: 10px;
-    font-size: 16px;
-  }
-  
-  .formName,
-  .formNumber {
-    display: block;
-    width: 100%;
-    margin-bottom: 20px;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .formBtn {
-    width: 125px;
-    padding: 10px;
-    background: rgb(0, 0, 255);
-    color: rgb(255, 255, 255);
-    border: inset 0.5px #683838;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    box-shadow: inset 0 0 0 2px #e9d5d5;
-    margin-top: 10px; /* Add some space above the button */
-    text-align: center; /* Center the text inside the button */
-  }
-  
-  .formBtn:hover {
-    background-color: rgba(135, 206, 250);
-    cursor: pointer;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border: 1px solid black;
+  padding: 10px;
+}
+.button {
+  width: 110px;
+  height: 40px;
+  align-self: center;
+  margin-top: 10px;
+  border: 1px solid black;
+  background-color: rgb(202, 199, 199);
+  transition: background-color 250ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+.button:hover {
+  background-color: rgb(230, 233, 235);
+}
+.error {
+  color: red;
+}
